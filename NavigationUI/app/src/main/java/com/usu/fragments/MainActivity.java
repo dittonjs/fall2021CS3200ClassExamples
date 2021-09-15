@@ -11,21 +11,11 @@ import com.usu.fragments.databinding.ActivityMainBinding;
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
 
-
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         System.out.println("CREATE");
         binding = ActivityMainBinding.inflate(getLayoutInflater());
-        binding.myButton.setOnClickListener(view -> {
-            System.out.println("Hello, world!");
-
-            startActivity(new Intent(this, SecondActivity.class));
-        });
         setContentView(binding.getRoot());
     }
 
