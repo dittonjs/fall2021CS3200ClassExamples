@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.usu.fragments.databinding.FragmentHomeBinding;
 
@@ -19,12 +20,14 @@ public class HomeFragment extends Fragment {
         FragmentHomeBinding binding = FragmentHomeBinding.inflate(inflater, container, false);
 
         binding.button.setOnClickListener(view -> {
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container_view, ProfileFragment.class, null)
-                    .addToBackStack(null)
-                    .setReorderingAllowed(true)
-                    .commit();
+            NavHostFragment.findNavController(this).navigate(R.id.action_homeFragment_to_profileFragment);
         });
         return binding.getRoot();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        System.out.println("I GOT DESTROYED, SON!");
     }
 }
