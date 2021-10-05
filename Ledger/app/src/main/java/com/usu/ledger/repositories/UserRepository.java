@@ -1,19 +1,8 @@
-package com.usu.firebaseauth.repositories;
+package com.usu.ledger.repositories;
 
-import android.app.Activity;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.usu.firebaseauth.models.User;
-
-import java.util.concurrent.Executor;
+import com.usu.ledger.models.User;
 
 public class UserRepository {
     FirebaseAuth auth;

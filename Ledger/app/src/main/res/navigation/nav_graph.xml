@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.usu.ledger.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_main_app"
+            app:destination="@id/main_app" />
+    </fragment>
+    <navigation android:id="@+id/main_app"
+        app:startDestination="@id/homeFragment">
+        <fragment
+            android:id="@+id/ledgerItemFragment2"
+            android:name="com.usu.ledger.LedgerItemFragment"
+            android:label="fragment_ledger_item"
+            tools:layout="@layout/fragment_ledger_item" />
+        <fragment
+            android:id="@+id/homeFragment"
+            android:name="com.usu.ledger.HomeFragment"
+            android:label="fragment_home"
+            tools:layout="@layout/fragment_home" >
+            <action
+                android:id="@+id/action_homeFragment_to_ledgerItemFragment2"
+                app:destination="@id/ledgerItemFragment2" />
+        </fragment>
+        <action
+            android:id="@+id/action_global_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+    </navigation>
+</navigation>
