@@ -19,7 +19,7 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         FragmentLoginBinding binding = FragmentLoginBinding.inflate(getLayoutInflater());
-        UserViewModel viewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        UserViewModel viewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
 
         viewModel.getUser().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
