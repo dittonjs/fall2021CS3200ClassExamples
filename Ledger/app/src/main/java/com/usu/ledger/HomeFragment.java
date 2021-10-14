@@ -6,11 +6,13 @@ import androidx.databinding.ObservableList;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.usu.ledger.adapters.TransactionsAdapter;
 import com.usu.ledger.databinding.FragmentHomeBinding;
 import com.usu.ledger.databinding.FragmentLoginBinding;
 import com.usu.ledger.models.Transaction;
@@ -32,37 +34,23 @@ public class HomeFragment extends Fragment {
             if (user == null) return;
 
             binding.fab.setOnClickListener(view -> {
+                transactionsViewModel.setSelectedTransaction(null);
                 NavHostFragment.findNavController(this).navigate(R.id.action_homeFragment_to_ledgerItemFragment2);
             });
 
-            transactionsViewModel.getTransactions(user.uid).addOnListChangedCallback(new ObservableList.OnListChangedCallback<ObservableList<Transaction>>() {
-                @Override
-                public void onChanged(ObservableList<Transaction> sender) {
-
-                }
-
-                @Override
-                public void onItemRangeChanged(ObservableList<Transaction> sender, int positionStart, int itemCount) {
-
-                }
-
-                @Override
-                public void onItemRangeInserted(ObservableList<Transaction> sender, int positionStart, int itemCount) {
-                    System.out.println();
-                }
-
-                @Override
-                public void onItemRangeMoved(ObservableList<Transaction> sender, int fromPosition, int toPosition, int itemCount) {
-
-                }
-
-                @Override
-                public void onItemRangeRemoved(ObservableList<Transaction> sender, int positionStart, int itemCount) {
-
-                }
-            });
+            binding.transactions.setAdapter(
+                    new TransactionsAdapter(
+                            transactionsViewModel.getTransactions(user.uid),
+                            transaction -> {
+                                transactionsViewModel.setSelectedTransaction(transaction);
+                                NavHostFragment.findNavController(this).navigate(R.id.action_homeFragment_to_ledgerItemFragment2);
+                            }
+                    )
+            );
+            binding.transactions.setLayoutManager(new LinearLayoutManager(getContext()));
 
         });
+
 
 
 

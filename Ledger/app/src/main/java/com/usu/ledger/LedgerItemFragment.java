@@ -26,6 +26,13 @@ public class LedgerItemFragment extends Fragment {
         TransactionsViewModel transactionsViewModel = new ViewModelProvider(getActivity()).get(TransactionsViewModel.class);
         UserViewModel userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
 
+        transactionsViewModel.getSelectedTransaction().observe(getViewLifecycleOwner(), transaction -> {
+            if (transaction != null) {
+                binding.amount.setText(transaction.getAmount() + "");
+                binding.details.setText(transaction.getDetails() + "");
+            }
+        });
+
         transactionsViewModel.getSaving().observe(getViewLifecycleOwner(), saving -> {
             if (!isSaving && saving) {
                 isSaving = true;

@@ -10,6 +10,7 @@ import com.usu.ledger.models.Transaction;
 public class TransactionsViewModel extends ViewModel {
     ObservableArrayList<Transaction> transactions;
     MutableLiveData<Boolean> saving = new MutableLiveData<>();
+    MutableLiveData<Transaction> selectedTransaction = new MutableLiveData<>();
     FirebaseFirestore db;
 
     public TransactionsViewModel() {
@@ -22,7 +23,13 @@ public class TransactionsViewModel extends ViewModel {
         return saving;
     }
 
+    public MutableLiveData<Transaction> getSelectedTransaction() {
+        return selectedTransaction;
+    }
 
+    public void setSelectedTransaction(Transaction selectedTransaction) {
+       this.selectedTransaction.setValue(selectedTransaction);
+    }
 
     public void createTransaction(String amount, String details, String userId) {
         saving.setValue(true);
@@ -38,7 +45,6 @@ public class TransactionsViewModel extends ViewModel {
                 .set(transaction)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        // do something
                         transactions.add(transaction);
                     } else {
                         // handle error
@@ -49,7 +55,24 @@ public class TransactionsViewModel extends ViewModel {
 
     }
 
-    public void updateTransaction(Transaction transaction) {}
+    public void updateTransaction(Transaction transaction,String amount, String details) {
+        saving.setValue(true);
+        transaction.setAmount(Double.parseDouble(amount));
+        transaction.setDetails(details);
+        db
+                .collection("transactions")
+                .document(transaction.getUserId() + "_" + transaction.getTimestamp())
+                .set(transaction)
+                .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                
+                            } else {
+                                // handle error
+                            }
+                            saving.setValue(false);
+                        }
+                );
+    }
 
     public void deleteTransaction(Transaction transaction) {}
 

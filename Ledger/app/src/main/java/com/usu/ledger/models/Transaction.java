@@ -15,6 +15,14 @@ public class Transaction {
         this.userId = userId;
     }
 
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
+
     public double getAmount() {
         return amount;
     }
