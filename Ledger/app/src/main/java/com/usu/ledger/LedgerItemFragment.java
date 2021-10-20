@@ -10,7 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.usu.ledger.databinding.FragmentLedgerItemBinding;
+import com.usu.ledger.models.Transaction;
 import com.usu.ledger.viewmodels.TransactionsViewModel;
 import com.usu.ledger.viewmodels.UserViewModel;
 
@@ -26,12 +28,24 @@ public class LedgerItemFragment extends Fragment {
         TransactionsViewModel transactionsViewModel = new ViewModelProvider(getActivity()).get(TransactionsViewModel.class);
         UserViewModel userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
 
-        transactionsViewModel.getSelectedTransaction().observe(getViewLifecycleOwner(), transaction -> {
-            if (transaction != null) {
-                binding.amount.setText(transaction.getAmount() + "");
-                binding.details.setText(transaction.getDetails() + "");
-            }
-        });
+        Transaction selectedTransction = transactionsViewModel.getSelectedTransaction().getValue();
+        if (selectedTransction != null) {
+            binding.amount.setText(selectedTransction.getAmount() + "");
+            binding.details.setText(selectedTransction.getDetails() + "");
+            binding.delete.setVisibility(View.VISIBLE);
+            binding.delete.setOnClickListener(view -> {
+                new MaterialAlertDialogBuilder(getContext())
+                        .setTitle("Delete")
+                        .setMessage("Are you sure you want to delete this transaction?")
+                        .setNegativeButton("cancel", (dialog, which) -> {
+                            dialog.dismiss();
+                        })
+                        .setPositiveButton("Delete", (dialog, which) -> {
+                            transactionsViewModel.deleteTransaction(selectedTransction);
+                        })
+                .show();
+            });
+        }
 
         transactionsViewModel.getSaving().observe(getViewLifecycleOwner(), saving -> {
             if (!isSaving && saving) {
@@ -46,11 +60,20 @@ public class LedgerItemFragment extends Fragment {
             if (user == null) return;
             binding.save.setOnClickListener(view -> {
                 binding.save.setEnabled(false);
-                transactionsViewModel.createTransaction(
-                        binding.amount.getText().toString(),
-                        binding.details.getText().toString(),
-                        user.uid
-                        );
+                if (selectedTransction == null) {
+                    transactionsViewModel.createTransaction(
+                            binding.amount.getText().toString(),
+                            binding.details.getText().toString(),
+                            user.uid
+                    );
+                } else {
+                    transactionsViewModel.updateTransaction(
+                            selectedTransction,
+                            binding.amount.getText().toString(),
+                            binding.details.getText().toString()
+                    );
+                }
+
             });
         });
 

@@ -55,7 +55,7 @@ public class TransactionsViewModel extends ViewModel {
 
     }
 
-    public void updateTransaction(Transaction transaction,String amount, String details) {
+    public void updateTransaction(Transaction transaction, String amount, String details) {
         saving.setValue(true);
         transaction.setAmount(Double.parseDouble(amount));
         transaction.setDetails(details);
@@ -65,7 +65,8 @@ public class TransactionsViewModel extends ViewModel {
                 .set(transaction)
                 .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
-                                
+                                int i = transactions.indexOf(transaction);
+                                transactions.set(i, transaction);
                             } else {
                                 // handle error
                             }
@@ -74,7 +75,20 @@ public class TransactionsViewModel extends ViewModel {
                 );
     }
 
-    public void deleteTransaction(Transaction transaction) {}
+    public void deleteTransaction(Transaction transaction) {
+        saving.setValue(true);
+        db.collection("transactions")
+                .document(transaction.getUserId() + "_" + transaction.getTimestamp())
+                .delete()
+                .addOnCompleteListener(task -> {
+                    if(task.isSuccessful()) {
+                        transactions.remove(transaction);
+                    } else {
+                        // handle errors
+                    }
+                    saving.setValue(false);
+                });
+    }
 
     public ObservableArrayList<Transaction> getTransactions(String userId) {
         if (transactions == null) {
