@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         ActivityResultLauncher<String> launcher = registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
                 isGranted -> {
@@ -43,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         );
 
         launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+
     }
 
     public void setupGeolocation() {
